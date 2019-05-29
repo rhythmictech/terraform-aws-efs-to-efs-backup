@@ -28,21 +28,6 @@ locals {
     "generalPurpose",
     "maxIO",
   ]
-
-  validSuccessNotificationOptions = [
-    "Yes",
-    "No",
-  ]
-
-  validDashboardOptions = [
-    "Yes",
-    "No",
-  ]
-
-  validEFSEncryptionOptions = [
-    "Yes",
-    "No",
-  ]
 }
 
 variable "SrcEFS" {
@@ -119,13 +104,7 @@ resource "null_resource" "is_EFS_mode_valid" {
 variable "SuccessNotification" {
   description = "Do you want to be notified for successful backups? *for failure, you will always be notified"
   type        = "string"
-  default     = "Yes"
-}
-
-resource "null_resource" "is_success_notification_valid" {
-  count = "${contains(local.validSuccessNotificationOptions, var.SuccessNotification)? 0 : 1}"
-
-  "\nERROR: SuccessNotification invalid\n  Valid values are: [\n    ${join(",\n    ", local.validSuccessNotificationOptions)}\n  ]\n  got: ${var.SuccessNotification}" = true
+  default     = true
 }
 
 variable "VpcId" {
@@ -152,23 +131,11 @@ variable "Email" {
 variable "Dashboard" {
   description = "Do you want a dashboard for your metrics?"
   type        = "string"
-  default     = "Yes"
-}
-
-resource "null_resource" "is_dashboard_valid" {
-  count = "${contains(local.validDashboardOptions, var.Dashboard)? 0 : 1}"
-
-  "\nERROR: Dashboard invalid\n  Valid values are: [\n    ${join(",\n    ", local.validDashboardOptions)}\n  ]\n  got: ${var.Dashboard}" = true
+  default     = true
 }
 
 variable "EFSEncryption" {
   description = "Do you want backup EFS to be encrypted?"
   type        = "string"
-  default     = "Yes"
-}
-
-resource "null_resource" "is_EFS_encryption_valid" {
-  count = "${contains(local.validEFSEncryptionOptions, var.EFSEncryption)? 0 : 1}"
-
-  "\nERROR: EFSEncryptiosn invalid\n  Valid values are: [\n    ${join(",\n    ", local.validEFSEncryptionOptions)}\n  ]\n  got: ${var.EFSEncryption}" = true
+  default     = true
 }
