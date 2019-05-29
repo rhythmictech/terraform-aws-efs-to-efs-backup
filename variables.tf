@@ -28,6 +28,22 @@ locals {
     "generalPurpose",
     "maxIO",
   ]
+
+  tags = {
+    tf_module = "efs-to-efs-backup"
+  }
+}
+
+variable "name" {
+  description = "Name for module and child resources"
+  type        = "string"
+  default     = "efs-backup"
+}
+
+variable "tags" {
+  description = "Tags that should be applied to resources"
+  type        = "map"
+  default     = {}
 }
 
 variable "SrcEFS" {
