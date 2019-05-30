@@ -4,8 +4,8 @@ resource "aws_security_group" "efs" {
   vpc_id      = "${var.VpcId}"
 
   ingress {
-    from_port = "-1"
-    to_port   = "-1"
+    from_port = "0"
+    to_port   = "0"
     protocol  = "-1"
     self      = true
   }
