@@ -64,20 +64,14 @@ locals {
   tag_values = "${concat(values(local.tags), values(var.tags))}"
 }
 
-data "null" "asg-tags" {
+data "null_data_source" "asg-tags" {
   count = "${length(local.tag_keys)}"
 
   inputs {
-    tag = {
-      key                 = "${local.tag_keys[count.index]}"
-      value               = "${local.tag_values[count.index]}"
-      propagate_at_launch = true
-    }
+    key                 = "${local.tag_keys[count.index]}"
+    value               = "${local.tag_values[count.index]}"
+    propagate_at_launch = true
   }
-}
-
-locals {
-  asg-tags = "${list(data.null.asg-tags.*.outputs["tag"])}"
 }
 
 resource "aws_autoscaling_group" "backup_instances" {
@@ -88,5 +82,12 @@ resource "aws_autoscaling_group" "backup_instances" {
   vpc_zone_identifier  = "${var.Subnets}"
   launch_configuration = "${aws_launch_configuration.backup_instance.name}"
 
-  tags = "${local.asg-tags}"
+  tags = [
+    "${data.null_data_source.asg-tags.*.outputs}",
+    {
+      key                 = "Name"
+      value               = "${var.name}-asg"
+      propagate_at_launch = true
+    },
+  ]
 }
