@@ -107,7 +107,7 @@ data "aws_iam_policy_document" "orchestrator" {
 
 resource "aws_iam_role" "orchestrator" {
   name_prefix        = "${var.name}-orchestrator-"
-  assume_role_policy = "${data.aws_iam_policy_document.orchestrator.json}"
+  assume_role_policy = "${data.aws_iam_policy_document.orchestrator-assume-role.json}"
   path               = "/"
 
   tags = "${merge(
