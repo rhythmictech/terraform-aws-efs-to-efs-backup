@@ -2,7 +2,7 @@ data "template_file" "dashboard_body" {
   template = "${file("${path.module}/dashboard.json.tpl")}"
 
   vars {
-    ScrEFS        = "${var.SrcEFS}"
+    SrcEFS        = "${var.SrcEFS}"
     DstEFS        = "${aws_efs_file_system.dst.id}"
     AWS_Region    = "${local.region}"
     AWS_StackName = "${var.name}"
