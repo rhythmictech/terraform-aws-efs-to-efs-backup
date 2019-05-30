@@ -18,7 +18,7 @@ resource "random_uuid" "backup-start-event-target" {}
 resource "aws_cloudwatch_event_target" "orchestrator-backup-start" {
   rule      = "${aws_cloudwatch_event_rule.BackupStartEvent.name}"
   arn       = "${aws_lambda_function.orchestrator.arn}"
-  target_id = "${var.name}-orchestrator-${random_uuid.backup-start-event-target.result}"
+  target_id = "${format("%-64s", "${var.name}-orchestrator-${random_uuid.backup-start-event-target.result}")}"
 
   input = "${jsonencode(
     map(
@@ -70,7 +70,7 @@ resource "random_uuid" "asg-event-target" {}
 resource "aws_cloudwatch_event_target" "asg" {
   rule      = "${aws_cloudwatch_event_rule.asg.name}"
   arn       = "${aws_lambda_function.orchestrator.arn}"
-  target_id = "${var.name}-orchestrator-${random_uuid.asg-event-target.result}"
+  target_id = "${format("%-64s", "${var.name}-orchestrator-${random_uuid.asg-event-target.result}")}"
 }
 
 resource "aws_lambda_permission" "asgEvent" {
