@@ -28,6 +28,11 @@ output "AmiId" {
   value       = "${data.aws_ami.efs_backup.id}"
 }
 
+output "security_group_id" {
+  description = "Security group ID to allow access from source EFS"
+  value = "${aws_security_group.efs.id}"
+}
+
 # Passive outputs
 output "SourceEFS" {
   description = "Source EFS provided by user"
