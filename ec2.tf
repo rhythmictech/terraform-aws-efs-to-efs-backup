@@ -1,5 +1,5 @@
 data "template_file" "userdata" {
-  template = "${file("userdata.sh.tpl")}"
+  template = "${file("${path.module}/userdata.sh.tpl")}"
 
   vars {
     SrcEFS       = "${var.SrcEFS}"
