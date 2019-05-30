@@ -5,7 +5,7 @@ output "UUID" {
 
 output "SNSTopic" {
   description = "Topic for your backup notifications"
-  value       = "${aws_cloudformation_stack.sns.outputs.ARN}"
+  value       = "${aws_cloudformation_stack.sns.outputs["ARN"]}"
 }
 
 output "BackupEFS" {

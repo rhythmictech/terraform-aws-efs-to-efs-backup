@@ -40,7 +40,7 @@ resource "aws_autoscaling_group" "backup_instances" {
   max_size             = 1
   min_size             = 0
   desired_capacity     = 0
-  vpc_zone_identifier  = "${var.Subnets}"
+  vpc_zone_identifier  = ["${var.Subnets}"]
   launch_configuration = "${aws_launch_configuration.backup_instance.name}"
 
   tags = [

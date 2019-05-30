@@ -23,7 +23,7 @@ resource "aws_lambda_function" "orchestrator" {
       backup_retention_copies = "${var.Retain}"
       interval_tag            = "${var.IntervalTag}"
       s3_bucket               = "${aws_s3_bucket.logs.id}"
-      topic_arn               = "${aws_cloudformation_stack.sns.outputs.ARN}"
+      topic_arn               = "${aws_cloudformation_stack.sns.outputs["ARN"]}"
       uuid                    = "${local.global_uuid}"
       send_anonymous_data     = "${var.send_anonymous_data}"
       notification_on_success = "${var.SuccessNotification}"

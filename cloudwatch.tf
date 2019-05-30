@@ -31,7 +31,7 @@ resource "aws_cloudwatch_event_target" "orchestrator-backup-start" {
 }
 
 resource "aws_lambda_permission" "BackupStartEvent" {
-  function_name       = "${aws_lambda_function.orchestrator.name}"
+  function_name       = "${aws_lambda_function.orchestrator.function_name}"
   action              = "lambda:InvokeFunction"
   principal           = "events.amazonaws.com"
   source_arn          = "${aws_cloudwatch_event_rule.BackupStartEvent.arn}"
@@ -74,7 +74,7 @@ resource "aws_cloudwatch_event_target" "asg" {
 }
 
 resource "aws_lambda_permission" "asgEvent" {
-  function_name       = "${aws_lambda_function.orchestrator.name}"
+  function_name       = "${aws_lambda_function.orchestrator.function_name}"
   action              = "lambda:InvokeFunction"
   principal           = "events.amazonaws.com"
   source_arn          = "${aws_cloudwatch_event_rule.asg.arn}"

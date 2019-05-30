@@ -152,10 +152,8 @@ variable "VpcId" {
   type        = "string"
 }
 
-resource "null_resource" "is_vpc_id_valid" {
-  count = "${replace(replace(var.VpcId, "/^vpc-([0-9a-f]{8}|[0-9a-f]{17})$/", 0), "/(^0.+)|(^[^0].*)/", 1)}"
-
-  "\nERROR: VpcId invalid\n  got: ${var.VpcId}" = true
+data "aws_vpc" "is_vpc_valid" {
+  id = "${var.VpcId}"
 }
 
 variable "Subnets" {

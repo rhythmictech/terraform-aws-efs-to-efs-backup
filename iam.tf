@@ -77,7 +77,7 @@ data "aws_iam_policy_document" "orchestrator" {
 
   statement {
     effect    = "Allow"
-    resources = ["${aws_cloudformation_stack.sns.outputs.ARN}"]
+    resources = ["${aws_cloudformation_stack.sns.outputs["ARN"]}"]
     actions   = ["sns:Publish"]
   }
 

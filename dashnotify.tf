@@ -6,7 +6,7 @@ data "template_file" "dashboard_body" {
     DstEFS        = "${aws_efs_file_system.dst.id}"
     AWS_Region    = "${local.region}"
     AWS_StackName = "${var.name}"
-    Orchestrator  = "${aws_lambda_function.orchestrator.name}"
+    Orchestrator  = "${aws_lambda_function.orchestrator.function_name}"
     EFSDynamoDB   = "${aws_dynamodb_table.efs.name}"
   }
 }
