@@ -1,4 +1,11 @@
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
 locals {
+  region        = "${data.aws_region.current.name}"
+  account_id    = "${data.aws_caller_identity.current.account_id}"
+  instance_type = "c5.xlarge"
+
   validIntervals = [
     "daily",
     "weekly",
@@ -29,6 +36,11 @@ locals {
     "maxIO",
   ]
 
+  validAnonymousData = [
+    "Yes",
+    "No",
+  ]
+
   tags = {
     tf_module = "efs-to-efs-backup"
   }
@@ -44,6 +56,18 @@ variable "tags" {
   description = "Tags that should be applied to resources"
   type        = "map"
   default     = {}
+}
+
+variable "send_anonymous_data" {
+  description = "Whether to send anonymous data back to Amazon"
+  type        = "string"
+  default     = "Yes"
+}
+
+resource "null_resource" "is_anon_data_valid" {
+  count = "${contains(local.validAnonymousData, var.send_anonymous_data)? 0 : 1}"
+
+  "\nERROR: send_anonymous_data invalid\n  Valid values are: [\n    ${join(",\n    ", local.validAnonymousData)}\n  ]\n  got: ${var.send_anonymous_data}" = true
 }
 
 variable "SrcEFS" {

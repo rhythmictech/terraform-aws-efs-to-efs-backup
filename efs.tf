@@ -37,6 +37,10 @@ resource "aws_efs_file_system" "dst" {
       "Name", "${var.name}-dst-fs"
     )
   )}"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_efs_mount_target" "dst" {
