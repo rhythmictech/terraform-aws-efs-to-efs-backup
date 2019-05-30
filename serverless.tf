@@ -1,7 +1,7 @@
 resource "random_uuid" "function_name" {}
 
 resource "aws_lambda_function" "orchestrator" {
-  function_name = "${var.name}-orchestrator-${random_uuid.function_name.result}"
+  function_name = "${var.name}-orch-${random_uuid.function_name.result}"
   description   = "EFS Backup - Lambda function to create EFS backups"
   handler       = "orchestrator.lambda_handler"
   role          = "${aws_iam_role.orchestrator.arn}"

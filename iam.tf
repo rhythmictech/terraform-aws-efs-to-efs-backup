@@ -84,7 +84,7 @@ data "aws_iam_policy_document" "orchestrator" {
   statement {
     effect = "Allow"
 
-    resources = ["arn:aws:lambda:${local.region}:${local.account_id}:function:${var.name}-orchestrator-${random_uuid.function_name.result}"]
+    resources = ["arn:aws:lambda:${local.region}:${local.account_id}:function:${var.name}-orch-${random_uuid.function_name.result}"]
 
     actions = [
       "lambda:AddPermission",
