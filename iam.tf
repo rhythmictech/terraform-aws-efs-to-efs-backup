@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "orchestrator" {
 
   statement {
     effect    = "Allow"
-    resources = ["arn:aws:autoscaling:${local.region}:${local.account_id}:autoscalingGroup:*:autoScalingGroupName/${aws_autoscaling_group.backup_instances.name}"]
+    resources = ["arn:aws:autoscaling:${local.region}:${local.account_id}:autoScalingGroup:*:autoScalingGroupName/${aws_autoscaling_group.backup_instances.name}"]
     actions   = ["autoscaling:UpdateAutoScalingGroup"]
   }
 
