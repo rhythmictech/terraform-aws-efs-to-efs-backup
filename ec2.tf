@@ -18,6 +18,10 @@ resource "aws_launch_configuration" "backup_instance" {
   instance_type        = "${local.instance_type}"
   iam_instance_profile = "${aws_iam_instance_profile.ec2.name}"
   user_data            = "${data.template_file.userdata.rendered}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 locals {

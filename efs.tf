@@ -24,6 +24,10 @@ resource "aws_security_group" "efs" {
       "Name", "${var.name}-sg"
     )
   )}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_efs_file_system" "dst" {
