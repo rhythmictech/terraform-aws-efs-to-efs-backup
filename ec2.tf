@@ -47,14 +47,14 @@ resource "aws_autoscaling_group" "backup_instances" {
   vpc_zone_identifier  = var.Subnets
   launch_configuration = aws_launch_configuration.backup_instance.name
 
-  tags = [
+  tags = flatten([
     data.null_data_source.asg-tags.*.outputs,
     {
       key                 = "Name"
       value               = "${var.name}-asg"
       propagate_at_launch = true
     },
-  ]
+  ])
 }
 
 resource "random_uuid" "lifecycle_hook_name" {
