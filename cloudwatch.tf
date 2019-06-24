@@ -1,40 +1,39 @@
 resource "aws_cloudwatch_event_rule" "BackupStartEvent" {
   name_prefix         = "${var.name}-backup-start-"
   description         = "Schedule to run EFS backup"
-  schedule_expression = "${var.BackupSchedule}"
+  schedule_expression = var.BackupSchedule
   is_enabled          = true
 
-  tags = "${merge(
+  tags = merge(
     local.tags,
     var.tags,
-    map(
-      "Name", "${var.name}-backup-start-event"
-    )
-  )}"
+    {
+      "Name" = "${var.name}-backup-start-event"
+    },
+  )
 }
 
-resource "random_uuid" "backup-start-event-target" {}
+resource "random_uuid" "backup-start-event-target" {
+}
 
 resource "aws_cloudwatch_event_target" "orchestrator-backup-start" {
-  rule      = "${aws_cloudwatch_event_rule.BackupStartEvent.name}"
-  arn       = "${aws_lambda_function.orchestrator.arn}"
+  rule      = aws_cloudwatch_event_rule.BackupStartEvent.name
+  arn       = aws_lambda_function.orchestrator.arn
   target_id = "${var.name}-orch-${random_uuid.backup-start-event-target.result}"
 
-  input = "${jsonencode(
-    map(
-      "mode",
-      "backup",
-      "action",
-      "start"
-    )
-  )}"
+  input = jsonencode(
+    {
+      "mode"   = "backup"
+      "action" = "start"
+    },
+  )
 }
 
 resource "aws_lambda_permission" "BackupStartEvent" {
-  function_name       = "${aws_lambda_function.orchestrator.function_name}"
+  function_name       = aws_lambda_function.orchestrator.function_name
   action              = "lambda:InvokeFunction"
   principal           = "events.amazonaws.com"
-  source_arn          = "${aws_cloudwatch_event_rule.BackupStartEvent.arn}"
+  source_arn          = aws_cloudwatch_event_rule.BackupStartEvent.arn
   statement_id_prefix = "${var.name}-backup-start-event-"
 }
 
@@ -56,27 +55,30 @@ resource "aws_cloudwatch_event_rule" "asg" {
 }
 PATTERN
 
-  tags = "${merge(
+
+  tags = merge(
     local.tags,
     var.tags,
-    map(
-      "Name", "${var.name}-backup-start-event"
-    )
-  )}"
+    {
+      "Name" = "${var.name}-backup-start-event"
+    },
+  )
 }
 
-resource "random_uuid" "asg-event-target" {}
+resource "random_uuid" "asg-event-target" {
+}
 
 resource "aws_cloudwatch_event_target" "asg" {
-  rule      = "${aws_cloudwatch_event_rule.asg.name}"
-  arn       = "${aws_lambda_function.orchestrator.arn}"
+  rule = aws_cloudwatch_event_rule.asg.name
+  arn = aws_lambda_function.orchestrator.arn
   target_id = "${var.name}-orch-${random_uuid.asg-event-target.result}"
 }
 
 resource "aws_lambda_permission" "asgEvent" {
-  function_name       = "${aws_lambda_function.orchestrator.function_name}"
-  action              = "lambda:InvokeFunction"
-  principal           = "events.amazonaws.com"
-  source_arn          = "${aws_cloudwatch_event_rule.asg.arn}"
+  function_name = aws_lambda_function.orchestrator.function_name
+  action = "lambda:InvokeFunction"
+  principal = "events.amazonaws.com"
+  source_arn = aws_cloudwatch_event_rule.asg.arn
   statement_id_prefix = "${var.name}-asg-event-"
 }
+

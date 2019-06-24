@@ -1,21 +1,21 @@
 output "UUID" {
   description = "Anonymous UUID for each stack deployment"
-  value       = "${local.global_uuid}"
+  value       = local.global_uuid
 }
 
 output "SNSTopic" {
   description = "Topic for your backup notifications"
-  value       = "${aws_cloudformation_stack.sns.outputs["ARN"]}"
+  value       = aws_cloudformation_stack.sns.outputs["ARN"]
 }
 
 output "BackupEFS" {
   description = "Backup EFS created by template"
-  value       = "${aws_efs_file_system.dst.id}"
+  value       = aws_efs_file_system.dst.id
 }
 
 output "DashboardView" {
   description = "CloudWatch Dashboard to view EFS metrics"
-  value = "${join("", aws_cloudwatch_dashboard.dash.*.dashboard_name)}"
+  value       = join("", aws_cloudwatch_dashboard.dash.*.dashboard_name)
 }
 
 output "LogBucket" {
@@ -25,16 +25,17 @@ output "LogBucket" {
 
 output "AmiId" {
   description = "AMI ID vended in template"
-  value       = "${data.aws_ami.efs_backup.id}"
+  value       = data.aws_ami.efs_backup.id
 }
 
 output "security_group_id" {
   description = "Security group ID to allow access from source EFS"
-  value = "${aws_security_group.efs.id}"
+  value       = aws_security_group.efs.id
 }
 
 # Passive outputs
 output "SourceEFS" {
   description = "Source EFS provided by user"
-  value       = "${var.SrcEFS}"
+  value       = var.SrcEFS
 }
+

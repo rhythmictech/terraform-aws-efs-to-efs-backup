@@ -4,12 +4,14 @@ data "aws_ami" "efs_backup" {
 
   filter {
     name   = "name"
-    values = ["${"amzn-ami-hvm*x86_64-gp2"}"]
+    values = ["amzn-ami-hvm*x86_64-gp2"]
   }
 }
 
-resource "random_uuid" "global" {}
+resource "random_uuid" "global" {
+}
 
 locals {
-  global_uuid = "${random_uuid.global.result}"
+  global_uuid = random_uuid.global.result
 }
+

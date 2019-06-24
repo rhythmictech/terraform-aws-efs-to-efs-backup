@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "orchestrator-assume-role" {
 }
 
 data "aws_efs_file_system" "src" {
-  file_system_id = "${var.SrcEFS}"
+  file_system_id = var.SrcEFS
 }
 
 data "aws_iam_policy_document" "orchestrator" {
@@ -47,8 +47,8 @@ data "aws_iam_policy_document" "orchestrator" {
     actions = ["elasticfilesystem:DescribeFileSystems"]
 
     resources = [
-      "${data.aws_efs_file_system.src.arn}",
-      "${aws_efs_file_system.dst.arn}",
+      data.aws_efs_file_system.src.arn,
+      aws_efs_file_system.dst.arn,
     ]
   }
 
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "orchestrator" {
 
   statement {
     effect    = "Allow"
-    resources = ["${aws_dynamodb_table.efs.arn}"]
+    resources = [aws_dynamodb_table.efs.arn]
 
     actions = [
       "dynamodb:GetItem",
@@ -77,7 +77,7 @@ data "aws_iam_policy_document" "orchestrator" {
 
   statement {
     effect    = "Allow"
-    resources = ["${aws_cloudformation_stack.sns.outputs["ARN"]}"]
+    resources = [aws_cloudformation_stack.sns.outputs["ARN"]]
     actions   = ["sns:Publish"]
   }
 
@@ -107,22 +107,22 @@ data "aws_iam_policy_document" "orchestrator" {
 
 resource "aws_iam_role" "orchestrator" {
   name_prefix        = "${var.name}-orchestrator-"
-  assume_role_policy = "${data.aws_iam_policy_document.orchestrator-assume-role.json}"
+  assume_role_policy = data.aws_iam_policy_document.orchestrator-assume-role.json
   path               = "/"
 
-  tags = "${merge(
+  tags = merge(
     local.tags,
     var.tags,
-    map(
-      "Name", "${var.name}-orchestrator-role"
-    )
-  )}"
+    {
+      "Name" = "${var.name}-orchestrator-role"
+    },
+  )
 }
 
 resource "aws_iam_role_policy" "orchestrator" {
   name_prefix = "${var.name}-orchestrator-"
-  policy      = "${data.aws_iam_policy_document.orchestrator.json}"
-  role        = "${aws_iam_role.orchestrator.name}"
+  policy      = data.aws_iam_policy_document.orchestrator.json
+  role        = aws_iam_role.orchestrator.name
 }
 
 data "aws_iam_policy_document" "ec2-assume-role" {
@@ -141,16 +141,16 @@ data "aws_iam_policy_document" "ec2-assume-role" {
 
 resource "aws_iam_role" "ec2" {
   name_prefix        = "${var.name}-ec2-"
-  assume_role_policy = "${data.aws_iam_policy_document.ec2-assume-role.json}"
+  assume_role_policy = data.aws_iam_policy_document.ec2-assume-role.json
   path               = "/"
 
-  tags = "${merge(
+  tags = merge(
     local.tags,
     var.tags,
-    map(
-      "Name", "${var.name}-ec2-role"
-    )
-  )}"
+    {
+      "Name" = "${var.name}-ec2-role"
+    },
+  )
 }
 
 data "aws_iam_policy_document" "ec2" {
@@ -197,17 +197,18 @@ data "aws_iam_policy_document" "ec2" {
 
 resource "aws_iam_role_policy" "ec2" {
   name_prefix = "${var.name}-ec2-"
-  policy      = "${data.aws_iam_policy_document.ec2.json}"
-  role        = "${aws_iam_role.ec2.name}"
+  policy      = data.aws_iam_policy_document.ec2.json
+  role        = aws_iam_role.ec2.name
 }
 
 resource "aws_iam_role_policy_attachment" "ec2" {
-  role       = "${aws_iam_role.ec2.name}"
+  role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_instance_profile" "ec2" {
   name_prefix = "${var.name}-"
   path        = "/"
-  role        = "${aws_iam_role.ec2.name}"
+  role        = aws_iam_role.ec2.name
 }
+
