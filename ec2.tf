@@ -24,19 +24,16 @@ resource "aws_launch_configuration" "backup_instance" {
   }
 }
 
-locals {
-  tag_keys   = concat(keys(local.tags), keys(var.tags))
-  tag_values = concat(values(local.tags), values(var.tags))
-}
-
-data "null_data_source" "asg-tags" {
-  count = length(local.tag_keys)
-
-  inputs = {
-    key                 = local.tag_keys[count.index]
-    value               = local.tag_values[count.index]
-    propagate_at_launch = true
-  }
+module "asg_tags" {
+  source  = "rhythmictech/asg-tag-transform/aws"
+  version = "1.0.0"
+  tag_map = merge(
+    local.tags,
+    var.tags,
+    {
+      Name = "${var.name}-asg"
+    }
+  )
 }
 
 resource "aws_autoscaling_group" "backup_instances" {
@@ -46,19 +43,10 @@ resource "aws_autoscaling_group" "backup_instances" {
   desired_capacity     = 0
   vpc_zone_identifier  = var.Subnets
   launch_configuration = aws_launch_configuration.backup_instance.name
-
-  tags = flatten([
-    data.null_data_source.asg-tags.*.outputs,
-    {
-      key                 = "Name"
-      value               = "${var.name}-asg"
-      propagate_at_launch = true
-    },
-  ])
+  tags                 = module.asg_tags.tag_list
 }
 
-resource "random_uuid" "lifecycle_hook_name" {
-}
+resource "random_uuid" "lifecycle_hook_name" {}
 
 resource "aws_autoscaling_lifecycle_hook" "backup_instances" {
   name                   = "${var.name}-${random_uuid.lifecycle_hook_name.result}"
