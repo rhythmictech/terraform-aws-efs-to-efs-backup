@@ -68,6 +68,7 @@ variable "send_anonymous_data" {
 }
 
 resource "errorcheck_is_valid" "is_anon_data_valid" {
+  name = "is_anon_data_valid"
   test = contains(local.validAnonymousData, var.send_anonymous_data)
 }
 
@@ -83,6 +84,7 @@ variable "IntervalTag" {
 }
 
 resource "errorcheck_is_valid" "is_interval_valid" {
+  name = "is_interval_valid"
   test = contains(local.validIntervals, var.IntervalTag)
 }
 
@@ -105,6 +107,7 @@ variable "BackupWindow" {
 }
 
 resource "errorcheck_is_valid" "is_backup_window_valid" {
+  name = "is_backup_window_valid"
   test = contains(local.validBackupWindows, var.BackupWindow)
 }
 
@@ -127,6 +130,7 @@ variable "EFSMode" {
 }
 
 resource "errorcheck_is_valid" "is_EFS_mode_valid" {
+  name = "is_EFS_mode_valid"
   test = contains(local.validEFSModes, var.EFSMode)
 }
 
