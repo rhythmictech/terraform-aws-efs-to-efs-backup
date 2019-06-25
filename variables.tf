@@ -67,11 +67,6 @@ variable "send_anonymous_data" {
   default     = "Yes"
 }
 
-resource "errorcheck_is_valid" "is_anon_data_valid" {
-  name = "is_anon_data_valid"
-  test = contains(local.validAnonymousData, var.send_anonymous_data)
-}
-
 variable "SrcEFS" {
   description = "Source EFS Id"
   type        = string
@@ -81,11 +76,6 @@ variable "IntervalTag" {
   description = "Interval label to identify backups"
   type        = string
   default     = "daily"
-}
-
-resource "errorcheck_is_valid" "is_interval_valid" {
-  name = "is_interval_valid"
-  test = contains(local.validIntervals, var.IntervalTag)
 }
 
 variable "Retain" {
@@ -106,11 +96,6 @@ variable "BackupWindow" {
   default     = 180
 }
 
-resource "errorcheck_is_valid" "is_backup_window_valid" {
-  name = "is_backup_window_valid"
-  test = contains(local.validBackupWindows, var.BackupWindow)
-}
-
 variable "BackupSchedule" {
   description = "Schedule for running backup"
   type        = string
@@ -127,11 +112,6 @@ variable "EFSMode" {
   description = "Performance mode for backup EFS"
   type        = string
   default     = "generalPurpose"
-}
-
-resource "errorcheck_is_valid" "is_EFS_mode_valid" {
-  name = "is_EFS_mode_valid"
-  test = contains(local.validEFSModes, var.EFSMode)
 }
 
 variable "SuccessNotification" {
