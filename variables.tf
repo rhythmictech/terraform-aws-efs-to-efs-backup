@@ -49,10 +49,6 @@ locals {
   }
 }
 
-provider "errorcheck" {
-  version = "~> 1.0.17"
-}
-
 variable "name" {
   description = "Name for module and child resources"
   type        = string
