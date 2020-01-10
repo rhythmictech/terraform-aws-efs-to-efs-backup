@@ -25,7 +25,7 @@ resource "aws_launch_configuration" "backup_instance" {
 }
 
 module "asg_tags" {
-  source  = "rhythmictech/asg-tag-transform/aws"
+  source  = "rhythmictech/terraform-aws-asg-tag-transform/aws"
   version = "1.0.0"
   tag_map = merge(
     local.tags,
