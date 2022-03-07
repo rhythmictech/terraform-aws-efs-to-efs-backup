@@ -67,9 +67,12 @@ variable "send_anonymous_data" {
   default     = "Yes"
 }
 
-resource "errorcheck_is_valid" "is_anon_data_valid" {
-  name = "is_anon_data_valid"
-  test = contains(local.validAnonymousData, var.send_anonymous_data)
+module "is_anon_data_valid" {
+  source  = "rhythmictech/errorcheck/terraform"
+  version = "~> 1.0.0"
+
+  assert        = contains(local.validAnonymousData, var.send_anonymous_data)
+  error_message = "'${var.send_anonymous_data}' is not a valid value for 'send_anonymous_data'. Must be one of ${local.validAnonymousData}"
 }
 
 variable "SrcEFS" {
@@ -82,10 +85,13 @@ variable "IntervalTag" {
   type        = string
   default     = "daily"
 }
+  
+module "is_interval_valid" {
+  source  = "rhythmictech/errorcheck/terraform"
+  version = "~> 1.0.0"
 
-resource "errorcheck_is_valid" "is_interval_valid" {
-  name = "is_interval_valid"
-  test = contains(local.validIntervals, var.IntervalTag)
+  assert        = contains(local.validIntervals, var.IntervalTag)
+  error_message = "'${var.IntervalTag}' is not a valid value for 'IntervalTag'. Must be one of ${local.validIntervals}"
 }
 
 variable "Retain" {
@@ -105,10 +111,13 @@ variable "BackupWindow" {
   type        = number
   default     = 180
 }
+  
+module "is_backup_window_valid" {
+  source  = "rhythmictech/errorcheck/terraform"
+  version = "~> 1.0.0"
 
-resource "errorcheck_is_valid" "is_backup_window_valid" {
-  name = "is_backup_window_valid"
-  test = contains(local.validBackupWindows, var.BackupWindow)
+  assert        = contains(local.validBackupWindows, var.BackupWindow)
+  error_message = "'${var.BackupWindow}' is not a valid value for 'BackupWindow'. Must be one of ${local.validBackupWindows}"
 }
 
 variable "BackupSchedule" {
@@ -128,10 +137,13 @@ variable "EFSMode" {
   type        = string
   default     = "generalPurpose"
 }
+  
+module "is_backup_window_valid" {
+  source  = "rhythmictech/errorcheck/terraform"
+  version = "~> 1.0.0"
 
-resource "errorcheck_is_valid" "is_EFS_mode_valid" {
-  name = "is_EFS_mode_valid"
-  test = contains(local.validEFSModes, var.EFSMode)
+  assert        = contains(local.validEFSModes, var.EFSMode)
+  error_message = "'${var.EFSMode}' is not a valid value for 'EFSMode'. Must be one of ${local.validEFSModes}"
 }
 
 variable "SuccessNotification" {
